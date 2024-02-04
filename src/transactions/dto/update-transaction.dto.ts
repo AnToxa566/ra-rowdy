@@ -3,5 +3,6 @@ export interface UpdateTransactionDto {
   sum: number;
   type: string;
   date: Date;
+  account: string;
   description?: string;
 }

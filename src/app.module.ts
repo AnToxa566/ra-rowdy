@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
+import { AccountsModule } from './accounts/accounts.module';
 import { TransactionsModule } from './transactions/transactions.module';
 
 @Module({
@@ -13,6 +14,7 @@ import { TransactionsModule } from './transactions/transactions.module';
       isGlobal: true,
     }),
     MongooseModule.forRoot(process.env.MONGODB_URI),
+    AccountsModule,
     TransactionsModule,
   ],
   controllers: [AppController],

@@ -15,12 +15,22 @@ export interface QueryParams {
   sort: string;
 }
 
+export interface ServiceConfig {
+  populateFields?: string | string[];
+}
+
 @Injectable()
 export class ApiBaseService<T, C, U> {
-  constructor(protected model: Model<T>) {}
+  constructor(
+    protected model: Model<T>,
+    protected config?: ServiceConfig,
+  ) {}
 
   async getOne(id: string): Promise<T> {
-    const model = await this.model.findById(id).exec();
+    const model = await this.model
+      .findById(id)
+      .exec()
+      .then((res) => this.populateResponse(res));
 
     if (!model) {
       throw new NotFoundException();
@@ -30,7 +40,10 @@ export class ApiBaseService<T, C, U> {
   }
 
   async findOne(query: FilterQuery<T>): Promise<T> {
-    const model = await this.model.findOne(query).exec();
+    const model = await this.model
+      .findOne(query)
+      .exec()
+      .then((res) => this.populateResponse(res));
 
     if (!model) {
       throw new NotFoundException();
@@ -56,7 +69,8 @@ export class ApiBaseService<T, C, U> {
           limit: pageSize,
           skip: skip,
         })
-        .exec(),
+        .exec()
+        .then((res) => this.populateResponse(res)),
       this.model.countDocuments(query).exec(),
     ]);
 
@@ -90,5 +104,19 @@ export class ApiBaseService<T, C, U> {
 
   async deleteMany(filter: FilterQuery<T>) {
     return this.model.where(filter).deleteMany().exec();
+  }
+
+  private getPopulate() {
+    return this.config?.populateFields || [];
+  }
+
+  private async populateResponse(res: any) {
+    const populateFields = this.getPopulate();
+
+    for (const path of populateFields) {
+      await this.model.populate(res, { path });
+    }
+
+    return res;
   }
 }

@@ -1,4 +1,3 @@
-import { FilterQuery } from 'mongoose';
 import {
   Body,
   Controller,
@@ -10,10 +9,8 @@ import {
   Query,
 } from '@nestjs/common';
 
-import { Transaction } from './schemas/transaction.schema';
 import { TransactionsService } from './transactions.service';
-import { CreateTransactionDto } from './dto/create-transaction.dto';
-import { UpdateTransactionDto } from './dto/update-transaction.dto';
+import { CreateTransactionDto, UpdateTransactionDto } from './dto';
 
 @Controller('transactions')
 export class TransactionsController {
@@ -21,13 +18,7 @@ export class TransactionsController {
 
   @Get()
   async findAll(@Query() query: { type?: string }) {
-    const filters: FilterQuery<Transaction> = {};
-
-    if (query.type) {
-      filters.type = query.type;
-    }
-
-    return await this.service.findAll(filters);
+    return await this.service.findAll(query);
   }
 
   @Get(':id')

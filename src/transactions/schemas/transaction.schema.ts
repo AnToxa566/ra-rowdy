@@ -1,5 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
+
+import { Account } from '../../accounts/schemas';
 
 export type TransactionDocument = HydratedDocument<Transaction>;
 
@@ -16,6 +18,13 @@ export class Transaction {
 
   @Prop({ required: true })
   date: Date;
+
+  @Prop({
+    type: MongooseSchema.Types.ObjectId,
+    ref: Account.name,
+    required: true,
+  })
+  account: Account;
 
   @Prop()
   description: string;
