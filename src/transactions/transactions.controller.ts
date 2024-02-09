@@ -17,7 +17,9 @@ export class TransactionsController {
   constructor(private service: TransactionsService) {}
 
   @Get()
-  async findAll(@Query() query: { type?: string }) {
+  async findAll(
+    @Query() query: { type?: string; startDate?: string; endDate?: string },
+  ) {
     return await this.service.findAll(query);
   }
 

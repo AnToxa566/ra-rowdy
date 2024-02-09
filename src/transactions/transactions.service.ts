@@ -1,10 +1,10 @@
-import { Model } from 'mongoose';
+import { Model, FilterQuery, ProjectionType, QueryOptions } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
 import { TransactionType } from '../common';
-import { ApiBaseService } from '../api-base';
 import { AccountsService } from '../accounts';
+import { ApiBaseService, PagedResult, QueryParams } from '../api-base';
 
 import { Transaction, TransactionDocument } from './schemas';
 import { CreateTransactionDto, UpdateTransactionDto } from './dto';
@@ -20,6 +20,25 @@ export class TransactionsService extends ApiBaseService<
     private accountsService: AccountsService,
   ) {
     super(model, { populateFields: 'account' });
+  }
+
+  override async findAll(
+    query: FilterQuery<TransactionDocument>,
+    projection?: ProjectionType<TransactionDocument> | null | undefined,
+    options?: QueryOptions<TransactionDocument> | null | undefined,
+    queryParams?: Partial<QueryParams>,
+  ): Promise<PagedResult<TransactionDocument>> {
+    if (query.startDate && query.endDate) {
+      query.date = {
+        $gte: new Date(query.startDate),
+        $lt: new Date(query.endDate),
+      };
+
+      delete query.startDate;
+      delete query.endDate;
+    }
+
+    return await super.findAll(query, projection, options, queryParams);
   }
 
   override async create(
