@@ -4,7 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 
 import { ApiBaseService } from '../api-base';
 
-import { CreateAccountDto, UpdateAccountDto } from './dto';
+import { CreateAccountDto, TransferDto, UpdateAccountDto } from './dto';
 import { Account, AccountDocument } from './schemas';
 
 @Injectable()
@@ -15,5 +15,13 @@ export class AccountsService extends ApiBaseService<
 > {
   constructor(@InjectModel(Account.name) model: Model<AccountDocument>) {
     super(model);
+  }
+
+  async transfer(data: TransferDto): Promise<void> {
+    const fromAccount = await super.getOne(data.from);
+    const toAccount = await super.getOne(data.to);
+
+    await super.update(data.from, { sum: fromAccount.sum - data.sum });
+    await super.update(data.to, { sum: toAccount.sum + data.sum });
   }
 }

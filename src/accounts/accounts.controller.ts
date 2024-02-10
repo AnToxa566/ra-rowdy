@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 
 import { AccountsService } from './accounts.service';
-import { CreateAccountDto, UpdateAccountDto } from './dto';
+import { CreateAccountDto, TransferDto, UpdateAccountDto } from './dto';
 
 @Controller('accounts')
 export class AccountsController {
@@ -28,6 +28,11 @@ export class AccountsController {
   @Post()
   async create(@Body() data: CreateAccountDto) {
     return await this.service.create(data);
+  }
+
+  @Post('transfer')
+  async transfer(@Body() data: TransferDto) {
+    return await this.service.transfer(data);
   }
 
   @Patch(':id')
