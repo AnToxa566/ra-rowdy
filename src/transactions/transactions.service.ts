@@ -44,11 +44,9 @@ export class TransactionsService extends ApiBaseService<
   override async create(
     data: CreateTransactionDto,
   ): Promise<TransactionDocument> {
-    const account = await this.accountsService.getOne(data.account);
+    let { sum: accountSum } = await this.accountsService.getOne(data.account);
 
-    const accountSum =
-      account.sum +
-      (data.type === TransactionType.INCOME ? data.sum : -data.sum);
+    accountSum += data.type === TransactionType.INCOME ? data.sum : -data.sum;
 
     await this.accountsService.update(data.account, {
       sum: accountSum,
@@ -62,24 +60,31 @@ export class TransactionsService extends ApiBaseService<
     data: CreateTransactionDto,
   ): Promise<TransactionDocument> {
     const oldTransaction = await this.model.findById(id).exec();
-    const account = await this.accountsService.getOne(data.account);
 
-    let accountSum = account.sum;
+    const oldAccount = await this.accountsService.getOne(
+      oldTransaction.account as unknown as string,
+    );
 
     if (oldTransaction.type === TransactionType.INCOME) {
-      accountSum -= oldTransaction.sum;
+      oldAccount.sum -= oldTransaction.sum;
     } else {
-      accountSum += oldTransaction.sum;
+      oldAccount.sum += oldTransaction.sum;
     }
+
+    await this.accountsService.update(oldAccount.id, {
+      sum: oldAccount.sum,
+    });
+
+    const newAccount = await this.accountsService.getOne(data.account);
 
     if (data.type === TransactionType.INCOME) {
-      accountSum += data.sum;
+      newAccount.sum += data.sum;
     } else {
-      accountSum -= data.sum;
+      newAccount.sum -= data.sum;
     }
 
-    this.accountsService.update(data.account, {
-      sum: accountSum,
+    await this.accountsService.update(data.account, {
+      sum: newAccount.sum,
     });
 
     return await super.update(id, data);
@@ -89,9 +94,7 @@ export class TransactionsService extends ApiBaseService<
     const oldTransaction = await this.model.findById(id).exec();
     const accountId = oldTransaction.account as unknown as string;
 
-    const account = await this.accountsService.getOne(accountId);
-
-    let accountSum = account.sum;
+    let { sum: accountSum } = await this.accountsService.getOne(accountId);
 
     if (oldTransaction.type === TransactionType.INCOME) {
       accountSum -= oldTransaction.sum;
@@ -99,7 +102,7 @@ export class TransactionsService extends ApiBaseService<
       accountSum += oldTransaction.sum;
     }
 
-    this.accountsService.update(accountId, {
+    await this.accountsService.update(accountId, {
       sum: accountSum,
     });
 
