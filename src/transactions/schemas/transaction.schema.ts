@@ -1,7 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
 
-import { Account } from '../../accounts/schemas';
+import { Account } from '../../accounts';
+import { Category } from '../../categories';
 
 export type TransactionDocument = HydratedDocument<Transaction>;
 
@@ -25,6 +26,13 @@ export class Transaction {
     required: true,
   })
   account: Account;
+
+  @Prop({
+    type: MongooseSchema.Types.ObjectId,
+    ref: Category.name,
+    required: true,
+  })
+  category: Category;
 
   @Prop()
   description: string;

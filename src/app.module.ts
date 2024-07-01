@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 
 import { AccountsModule } from './accounts';
 import { OperationsModule } from './operations';
+import { CategoriesModule } from './categories';
 import { TransactionsModule } from './transactions';
 
 @Module({
@@ -16,6 +17,7 @@ import { TransactionsModule } from './transactions';
     }),
     MongooseModule.forRoot(process.env.MONGODB_URI),
     AccountsModule,
+    CategoriesModule,
     OperationsModule,
     TransactionsModule,
   ],

@@ -4,5 +4,6 @@ export interface UpdateTransactionDto {
   type: string;
   date: Date;
   account: string;
+  category: string;
   description?: string;
 }
