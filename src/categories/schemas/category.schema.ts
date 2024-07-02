@@ -10,6 +10,9 @@ export class Category {
 
   @Prop({ required: true })
   slug: string;
+
+  @Prop({ required: true, default: 0 })
+  order: number;
 }
 
 export const CategorySchema = SchemaFactory.createForClass(Category);

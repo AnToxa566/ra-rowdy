@@ -17,7 +17,7 @@ export class CategoriesController {
 
   @Get()
   async findAll() {
-    return await this.service.findAll({});
+    return await this.service.findAll({}, null, null, { sort: { order: -1 } });
   }
 
   @Get(':id')

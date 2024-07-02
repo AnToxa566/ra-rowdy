@@ -1,4 +1,10 @@
-import { FilterQuery, Model, ProjectionType, QueryOptions } from 'mongoose';
+import {
+  FilterQuery,
+  Model,
+  ProjectionType,
+  QueryOptions,
+  SortOrder,
+} from 'mongoose';
 import { Injectable, NotFoundException } from '@nestjs/common';
 
 export interface PagedResult<T> {
@@ -12,7 +18,10 @@ export interface PagedResult<T> {
 export interface QueryParams {
   page: string;
   pageSize: string;
-  sort: string;
+  sort:
+    | string
+    | { [key: string]: SortOrder | { $meta: any } }
+    | [string, SortOrder][];
 }
 
 export interface ServiceConfig {
@@ -69,6 +78,7 @@ export class ApiBaseService<T, C, U> {
           limit: pageSize,
           skip: skip,
         })
+        .sort(queryParams?.sort)
         .exec()
         .then((res) => this.populateResponse(res)),
       this.model.countDocuments(query).exec(),

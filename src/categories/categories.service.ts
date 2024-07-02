@@ -20,21 +20,25 @@ export class CategoriesService extends ApiBaseService<
   }
 
   override async create(data: CreateCategoryDto): Promise<CategoryDocument> {
-    console.log(data);
+    const newData = { ...data };
 
-    return super.create({
-      name: data.name,
-      slug: data.slug || slugify(data.name),
-    });
+    if (data.name) {
+      newData.slug = data.slug || slugify(data.name);
+    }
+
+    return super.create(newData);
   }
 
   override async update(
     id: string,
     data: UpdateCategoryDto,
   ): Promise<CategoryDocument> {
-    return super.update(id, {
-      name: data.name,
-      slug: data.slug || slugify(data.name),
-    });
+    const newData = { ...data };
+
+    if (data.name) {
+      newData.slug = data.slug || slugify(data.name);
+    }
+
+    return super.update(id, newData);
   }
 }
