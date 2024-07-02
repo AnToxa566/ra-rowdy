@@ -19,7 +19,7 @@ export class TransactionsService extends ApiBaseService<
     @InjectModel(Transaction.name) model: Model<TransactionDocument>,
     private accountsService: AccountsService,
   ) {
-    super(model, { populateFields: 'account' });
+    super(model, { populateFields: ['category', 'account'] });
   }
 
   override async findAll(

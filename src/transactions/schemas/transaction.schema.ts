@@ -9,9 +9,6 @@ export type TransactionDocument = HydratedDocument<Transaction>;
 @Schema()
 export class Transaction {
   @Prop({ required: true })
-  name: string;
-
-  @Prop({ required: true })
   sum: number;
 
   @Prop({ required: true })
