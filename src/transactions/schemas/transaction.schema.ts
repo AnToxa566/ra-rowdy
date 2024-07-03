@@ -33,6 +33,12 @@ export class Transaction {
 
   @Prop()
   description: string;
+
+  @Prop({
+    required: true,
+    default: () => new Date(),
+  })
+  created_at: Date;
 }
 
 export const TransactionSchema = SchemaFactory.createForClass(Transaction);

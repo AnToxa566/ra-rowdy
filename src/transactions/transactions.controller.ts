@@ -20,7 +20,9 @@ export class TransactionsController {
   async findAll(
     @Query() query: { type?: string; startDate?: string; endDate?: string },
   ) {
-    return await this.service.findAll(query);
+    return await this.service.findAll(query, null, null, {
+      sort: { created_at: -1 },
+    });
   }
 
   @Get(':id')
