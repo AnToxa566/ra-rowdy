@@ -10,6 +10,9 @@ export class Account {
 
   @Prop({ required: true, default: 0 })
   sum: number;
+
+  @Prop({ required: true })
+  color: string;
 }
 
 export const AccountSchema = SchemaFactory.createForClass(Account);

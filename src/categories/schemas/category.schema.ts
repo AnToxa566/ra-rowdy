@@ -13,6 +13,9 @@ export class Category {
 
   @Prop({ required: true, default: 0 })
   order: number;
+
+  @Prop({ required: true })
+  color: string;
 }
 
 export const CategorySchema = SchemaFactory.createForClass(Category);
