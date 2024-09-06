@@ -13,6 +13,9 @@ export class Account {
 
   @Prop({ required: true })
   color: string;
+
+  @Prop({ default: true })
+  countable: boolean;
 }
 
 export const AccountSchema = SchemaFactory.createForClass(Account);
