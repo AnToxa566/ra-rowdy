@@ -8,6 +8,6 @@ async function bootstrap() {
   app.enableCors();
   app.setGlobalPrefix('rowdy-api');
 
-  await app.listen(4200);
+  await app.listen(process.env.PORT || 4200);
 }
 bootstrap();
