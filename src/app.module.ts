@@ -11,6 +11,7 @@ import { OperationsModule } from './operations';
 import { CategoriesModule } from './categories';
 import { TransactionsModule } from './transactions';
 import { UploadModule } from './upload/upload.module';
+import { AccountTransferModule } from './account-transfer/account-transfer.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { UploadModule } from './upload/upload.module';
     OperationsModule,
     TransactionsModule,
     UploadModule,
+    AccountTransferModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
-import { Account, AccountSchema, AccountsService } from '../accounts';
+import { AccountsModule } from '../accounts';
 
 import { Transaction, TransactionSchema } from './schemas';
 import { TransactionsService } from './transactions.service';
@@ -11,10 +11,10 @@ import { TransactionsController } from './transactions.controller';
   imports: [
     MongooseModule.forFeature([
       { name: Transaction.name, schema: TransactionSchema },
-      { name: Account.name, schema: AccountSchema },
     ]),
+    AccountsModule,
   ],
-  providers: [TransactionsService, AccountsService],
+  providers: [TransactionsService],
   controllers: [TransactionsController],
 })
 export class TransactionsModule {}

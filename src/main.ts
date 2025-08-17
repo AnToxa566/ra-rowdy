@@ -1,4 +1,5 @@
 import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
 
 import { AppModule } from './app.module';
 
@@ -7,6 +8,7 @@ async function bootstrap() {
 
   app.enableCors();
   app.setGlobalPrefix('rowdy-api');
+  app.useGlobalPipes(new ValidationPipe());
 
   await app.listen(process.env.PORT || 4200);
 }

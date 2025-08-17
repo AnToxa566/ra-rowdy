@@ -3,7 +3,11 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Injectable, Logger } from '@nestjs/common';
 
 import { ApiBaseService } from '../api-base';
-import { TransferAccountLog, UpdateAccountLog } from '../common';
+import { UpdateAccountLog } from '../common';
+import {
+  CreateAccountTransferDto,
+  AccountTransferService,
+} from '../account-transfer';
 
 import { Account, AccountDocument } from './schemas';
 import { CreateAccountDto, TransferDto, UpdateAccountDto } from './dto';
@@ -16,7 +20,10 @@ export class AccountsService extends ApiBaseService<
 > {
   private readonly logger = new Logger(AccountsService.name);
 
-  constructor(@InjectModel(Account.name) model: Model<AccountDocument>) {
+  constructor(
+    @InjectModel(Account.name) model: Model<AccountDocument>,
+    private readonly accountTransferService: AccountTransferService,
+  ) {
     super(model);
   }
 
@@ -31,9 +38,9 @@ export class AccountsService extends ApiBaseService<
     const fromNewSum = fromAccount.sum - data.sum;
     const toNewSum = toAccount.sum + data.sum;
 
-    const log: TransferAccountLog = {
-      from: data.from,
-      to: data.to,
+    const accountTransfer: CreateAccountTransferDto = {
+      fromId: data.from,
+      toId: data.to,
       sum: data.sum,
       fromOldSum: fromAccount.sum,
       toOldSum: toAccount.sum,
@@ -44,7 +51,9 @@ export class AccountsService extends ApiBaseService<
     await super.update(data.from, { sum: fromNewSum });
     await super.update(data.to, { sum: toNewSum });
 
-    this.logger.log('Money transfer completed: ', log);
+    await this.accountTransferService.create(accountTransfer);
+
+    this.logger.log('Money transfer completed: ', accountTransfer);
   }
 
   override async update(
