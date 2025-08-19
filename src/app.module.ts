@@ -12,6 +12,7 @@ import { CategoriesModule } from './categories';
 import { TransactionsModule } from './transactions';
 import { UploadModule } from './upload/upload.module';
 import { AccountTransferModule } from './account-transfer/account-transfer.module';
+import { AccountBalanceUpdatesModule } from './account-balance-updates/account-balance-updates.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { AccountTransferModule } from './account-transfer/account-transfer.modul
     TransactionsModule,
     UploadModule,
     AccountTransferModule,
+    AccountBalanceUpdatesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

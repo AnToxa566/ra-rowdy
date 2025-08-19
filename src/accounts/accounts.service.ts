@@ -8,6 +8,7 @@ import {
   CreateAccountTransferDto,
   AccountTransferService,
 } from '../account-transfer';
+import { AccountBalanceUpdatesService } from '../account-balance-updates';
 
 import { Account, AccountDocument } from './schemas';
 import { CreateAccountDto, TransferDto, UpdateAccountDto } from './dto';
@@ -23,6 +24,7 @@ export class AccountsService extends ApiBaseService<
   constructor(
     @InjectModel(Account.name) model: Model<AccountDocument>,
     private readonly accountTransferService: AccountTransferService,
+    private readonly accountBalanceUpdatesService: AccountBalanceUpdatesService,
   ) {
     super(model);
   }
@@ -66,6 +68,17 @@ export class AccountsService extends ApiBaseService<
     };
 
     this.logger.log('Account updated: ', log);
+
+    if (data.sum) {
+      const account = await super.getOne(id);
+
+      await this.accountBalanceUpdatesService.create({
+        accountId: id,
+        newSum: data.sum,
+        oldSum: account.sum,
+      });
+    }
+
     return await super.update(id, data);
   }
 }
