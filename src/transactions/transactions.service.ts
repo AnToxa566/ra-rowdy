@@ -3,6 +3,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
 import {
+  AccountBalanceUpdateType,
   CreateTransactionLog,
   DeleteTransactionLog,
   TransactionType,
@@ -66,9 +67,13 @@ export class TransactionsService extends ApiBaseService<
     accountSum += data.type === TransactionType.INCOME ? data.sum : -data.sum;
     log.newAccounSum = accountSum;
 
-    await this.accountsService.update(data.account, {
-      sum: accountSum,
-    });
+    await this.accountsService.update(
+      data.account,
+      {
+        sum: accountSum,
+      },
+      AccountBalanceUpdateType.TransactionCreated,
+    );
 
     this.logger.log('Transaction created: ', log);
     return await super.create(data);
@@ -103,9 +108,13 @@ export class TransactionsService extends ApiBaseService<
 
     log.oldAccountAfterUpdateSum = oldAccount.sum;
 
-    await this.accountsService.update(oldAccount.id, {
-      sum: oldAccount.sum,
-    });
+    await this.accountsService.update(
+      oldAccount.id,
+      {
+        sum: oldAccount.sum,
+      },
+      AccountBalanceUpdateType.TransactionUpdated,
+    );
 
     const newAccount = await this.accountsService.getOne(data.account);
     log.newAccountBeforeUpdateSum = newAccount.sum;
@@ -118,9 +127,13 @@ export class TransactionsService extends ApiBaseService<
 
     log.newAccountAfterUpdateSum = newAccount.sum;
 
-    await this.accountsService.update(data.account, {
-      sum: newAccount.sum,
-    });
+    await this.accountsService.update(
+      data.account,
+      {
+        sum: newAccount.sum,
+      },
+      AccountBalanceUpdateType.TransactionUpdated,
+    );
 
     this.logger.log('Transaction updated: ', log);
     return await super.update(id, data);
@@ -149,9 +162,13 @@ export class TransactionsService extends ApiBaseService<
 
     log.newAccountSum = accountSum;
 
-    await this.accountsService.update(accountId, {
-      sum: accountSum,
-    });
+    await this.accountsService.update(
+      accountId,
+      {
+        sum: accountSum,
+      },
+      AccountBalanceUpdateType.TransactionDeleted,
+    );
 
     this.logger.log('Transaction deleted: ', log);
     return await super.delete(id);

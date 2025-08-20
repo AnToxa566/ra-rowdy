@@ -9,6 +9,7 @@ import {
   AccountTransferService,
 } from '../account-transfer';
 import { AccountBalanceUpdatesService } from '../account-balance-updates';
+import { AccountBalanceUpdateType } from '../common/enum/account-balance-update-type.enum';
 
 import { Account, AccountDocument } from './schemas';
 import { CreateAccountDto, TransferDto, UpdateAccountDto } from './dto';
@@ -61,6 +62,7 @@ export class AccountsService extends ApiBaseService<
   override async update(
     id: string,
     data: Partial<UpdateAccountDto>,
+    type?: AccountBalanceUpdateType,
   ): Promise<AccountDocument> {
     const log: UpdateAccountLog = {
       id,
@@ -76,6 +78,7 @@ export class AccountsService extends ApiBaseService<
         accountId: id,
         newSum: data.sum,
         oldSum: account.sum,
+        type: type || AccountBalanceUpdateType.ManualUpdate,
       });
     }
 

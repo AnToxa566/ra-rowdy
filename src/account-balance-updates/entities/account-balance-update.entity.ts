@@ -1,5 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+
 import { Document } from 'mongoose';
+
+import { AccountBalanceUpdateType } from '../../common/enum/account-balance-update-type.enum';
 
 export type AccountBalanceUpdateDocument = AccountBalanceUpdate & Document;
 
@@ -13,6 +16,13 @@ export class AccountBalanceUpdate {
 
   @Prop({ required: true })
   newSum: number;
+
+  @Prop({
+    required: true,
+    enum: AccountBalanceUpdateType,
+    default: AccountBalanceUpdateType.ManualUpdate,
+  })
+  type: AccountBalanceUpdateType;
 }
 
 export const AccountBalanceUpdateSchema =

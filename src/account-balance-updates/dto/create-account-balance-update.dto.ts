@@ -1,4 +1,12 @@
-import { IsString, IsNumber, IsNotEmpty } from 'class-validator';
+import {
+  IsString,
+  IsNumber,
+  IsNotEmpty,
+  IsEnum,
+  IsOptional,
+} from 'class-validator';
+
+import { AccountBalanceUpdateType } from '../../common/enum/account-balance-update-type.enum';
 
 export class CreateAccountBalanceUpdateDto {
   @IsString()
@@ -12,4 +20,8 @@ export class CreateAccountBalanceUpdateDto {
   @IsNumber()
   @IsNotEmpty()
   newSum: number;
+
+  @IsEnum(AccountBalanceUpdateType)
+  @IsOptional()
+  type?: AccountBalanceUpdateType;
 }
